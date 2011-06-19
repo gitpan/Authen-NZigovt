@@ -1,0 +1,188 @@
+#!/usr/bin/perl
+##############################################################################
+#
+# Tools for interacting with the New Zealand 'igovt Logon Service'
+# (see: https://i.govt.nz/ ).
+#
+# These tools ARE NOT produced by, nor endorsed by the Department of Internal
+# Affairs who operate the igovt logon service.  They are merely an implemention
+# of the published protocols.
+#
+# For more information, see:
+#
+#   nzigovt --help
+#
+
+use strict;
+use warnings;
+
+use Pod::Usage;
+use Getopt::Long qw(GetOptions);
+
+use Authen::NZigovt;
+
+my(%opt);
+
+if(!GetOptions(\%opt,
+    'help|?',
+    'conf_dir|conf-dir|c=s',
+    'env=s',
+    'org=s',
+    'org_unit=s',
+    'domain=s',
+)) {
+    pod2usage(-exitval => 1,  -verbose => 0);
+}
+
+
+if($opt{help} or (@ARGV && $ARGV[0] eq 'help')) {
+    pod2usage(-exitstatus => 0, -verbose => 2);
+}
+
+eval { Authen::NZigovt->run_command(\%opt, @ARGV); };
+if($@) {
+    pod2usage(-exitstatus => 1, -verbose => 0, -message => "$@");
+}
+
+exit 0;
+
+__END__
+
+=head1 NAME
+
+nzigovt - Tools for interacting with the New Zealand 'igovt Logon Service'
+
+=head1 SYNOPSIS
+
+  nzigovt [options] <command> [args ...]
+
+  Commands:
+
+   make-meta   generate XML metadata for your Service Provider (SP)
+   make-certs  generate certificate/key-pair files
+   make-bundle generate a zip archive of metadata and certificate files
+   make-req    generate a SAML AuthnRequest, encoded as a URL
+   dump-req    dissect the provided URL and dump the XML
+   resolve     resolve an artifact to an FLT
+   help        detailed help message
+
+  Options:
+
+   --conf-dir <path>  pathname of directory containing metadata & cert files
+   --env <name>       target environment (must be: 'mts', 'ite' or 'prod')
+   --org <name>       organisation/agency name, e.g.: "Department of Innovation"
+   --org-unit <name>  organisational unit, e.g.: "Innovation Labs"
+   --domain <name>    agency site domain e.g.: innovation.govt.nz
+
+=head1 DESCRIPTION
+
+The C<nzigovt> script and related modules from the L<Authen::NZigovt>
+distribution provide tools for interacting with the New Zealand 'igovt logon
+service' operated by the Department of Internal Affairs.  These tools ARE NOT
+produced by nor endorsed by the Department of Internal Affairs.  They are
+merely an implemention of the published protocols.
+
+=head1 COMMANDS
+
+The following commands are available:
+
+=over 4
+
+=item make-certs
+
+Generate two certificate/key pairs - one for signing and one for mutual SSL
+encryption.  This step is not required for integrating with the development
+environment ('MTS') since certficates will be provided to you.  For integration
+with the test environment ('ITE') two self-signed certificates will be
+generated.  For integration with the production environment ('PROD') two CSRs
+(Certificate Signing Requests) will be generated which you will then use to get
+signed certificates issued from an approved CA (Certification Authority).
+
+=item make-meta
+
+Generate (or edit) a Service Provider metadata file and save it with a digital
+signature.
+
+=item make-bundle
+
+Create a ZIP file containing the metadata and certificate files needed by
+the Identity Provider.
+
+=item make-req
+
+Generate a URL containing a SAML AuthnRequest - for initiating a logon.
+
+=item dump-req
+
+Takes a URL containing a SAML AuthnRequest; decodes it; and dumps the XML.  For
+example:
+
+  nzigovt -c /etc/igovt-conf make-req | nzigovt -c /etc/igovt-conf dump-req
+
+This utility can be used to dump AuthnRequests produced by any SAML
+implementation.
+
+=item resolve
+
+Takes a URL containing a SAML artifact; decodes it; generates a SAML
+ArtifactResolve request; sends the request to the IdP using SOAP over the SSL
+back-channel; validates the resulting assertion; and extracts the FLT
+(Federated Logon Tag) from the response.
+
+Note: in practice a SML artifact must be resolved very soon after it is
+generated or it will expire.
+
+=back
+
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<< --conf-dir <directory> >> (alias -c)
+
+Specify the path to the directory containing the metadata files and
+certificate/key-pair files for signing requests and encrypting SSL traffic.
+See C<< perldoc Authen::NZigovt >> for more information about config files.
+
+=item B<< --env <name> >>
+
+This option can be used with the C<make-certs> command and specifies the
+target environment for the certificates.  Acceptable values are 'mts', 'ite'
+and 'prod'.
+
+If you do not provide any certificate parameters, you will be prompted.
+
+=item B<< --org "<name>" >>
+
+The service provider agency/organisation name which should be used in the
+certificates.
+
+=item B<< --org "<name>" >>
+
+The optional organisational unit name for use in the certificates.
+
+=item B<< --help >> (alias -?)
+
+Display this documentation.
+
+=back
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c) 2010-2011 the New Zealand Electoral Enrolment Centre
+
+Written by Grant McLean E<lt>grant@catalyst.net.nzE<gt>
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+
+=cut
+
+
+
