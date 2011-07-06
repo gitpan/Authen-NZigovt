@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider::Builder;
 BEGIN {
-  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.02';
+  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.03';
 }
 
 use warnings;
@@ -39,8 +39,9 @@ the user back to?
 EOF
 
     url_single_logout => <<EOF,
-After a user has logged off, which URL on your site should the IdP redirect
-the user back to?
+The single logout URL is the URL which the IdP should use to advise your
+application that a single-signon session has been terminated.  You should leave
+this blank if your application does not implement single logout.
 EOF
 
     contact_company => <<EOF,
@@ -196,7 +197,8 @@ sub make_bundle {
     my($env) = $idp_name =~ m{www[.](mts|ite)};
     $env ||= 'prod';
 
-    my $work_dir = $sp->conf_dir . '/bundle';
+    my $conf_dir = $sp->conf_dir;
+    my $work_dir = "$conf_dir/bundle";
     rmtree($work_dir) if -e $work_dir;
 
     mkdir($work_dir) or die "mkdir($work_dir)";
@@ -209,14 +211,19 @@ sub make_bundle {
 
     print "Assembling metadata and certificate files\n";
 
-    copy('../metadata-sp.xml' => $metadata_file);
-    copy('../sp-sign-crt.pem' => $signing_cert);
-    copy('../sp-ssl-crt.pem'  => $ssl_cert);
+    copy('../metadata-sp.xml' => $metadata_file)
+        or die "error copying $conf_dir/metadata-sp.xml: $!\n";
+
+    copy('../sp-sign-crt.pem' => $signing_cert)
+        or die "error copying $conf_dir/sp-sign-crt.pem: $!\n";
+
+    copy('../sp-ssl-crt.pem'  => $ssl_cert)
+        or die "error copying $conf_dir/sp-ssl-crt.pem: $!\n";
 
     system('zip', $zip_file, $metadata_file, $signing_cert, $ssl_cert);
 
 
-    chdir('..') or die "chdir('..')";
+    chdir('..') or die "chdir('..'): $!";
     rmtree($work_dir);
 
     return $zip_file;

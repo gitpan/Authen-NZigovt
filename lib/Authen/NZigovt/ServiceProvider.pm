@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider;
 BEGIN {
-  $Authen::NZigovt::ServiceProvider::VERSION = '1.02';
+  $Authen::NZigovt::ServiceProvider::VERSION = '1.03';
 }
 
 use strict;
@@ -14,6 +14,7 @@ require HTTP::Response;
 use URI::Escape  qw(uri_escape uri_unescape);
 use Digest::MD5  qw(md5_hex);
 use POSIX        qw(strftime);
+use File::Spec   qw();
 
 use WWW::Curl::Easy qw(
     CURLOPT_URL
@@ -55,6 +56,10 @@ sub new {
     my $class = shift;
 
     my $self = bless { @_ }, $class;
+
+    my $conf_dir = $self->{conf_dir} or die "conf_dir not set\n";
+    $self->{conf_dir} = File::Spec->rel2abs($conf_dir);
+
     $self->_load_metadata();
 
     return $self;
@@ -162,8 +167,11 @@ sub _load_metadata {
 sub _read_metadata_from_file {
     my $self = shift;
 
+    my $metadata_file = $self->_metadata_pathname;
+    die "File does not exist: $metadata_file\n" unless -e $metadata_file;
+
     my $parser = XML::LibXML->new();
-    my $doc    = $parser->parse_file( $self->_metadata_pathname );
+    my $doc    = $parser->parse_file( $metadata_file );
     my $xc     = XML::LibXML::XPathContext->new( $doc->documentElement() );
 
     $xc->registerNs( @$ns_md );
@@ -621,11 +629,12 @@ sub _gen_svc_logout {
     my $self = shift;
     my $x    = $self->_x;
 
+    my $single_logout_url = $self->url_single_logout or return;
     return $x->SingleLogoutService($ns_md,
         {
             Binding          => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-            Location         => $self->url_single_logout,
-            ResponseLocation => $self->url_single_logout,
+            Location         => $single_logout_url,
+            ResponseLocation => $single_logout_url,
         },
     );
 }

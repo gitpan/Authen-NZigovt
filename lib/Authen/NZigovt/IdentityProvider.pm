@@ -1,6 +1,6 @@
 package Authen::NZigovt::IdentityProvider;
 BEGIN {
-  $Authen::NZigovt::IdentityProvider::VERSION = '1.02';
+  $Authen::NZigovt::IdentityProvider::VERSION = '1.03';
 }
 
 use strict;
@@ -72,8 +72,11 @@ sub _load_metadata {
 sub _read_metadata_from_file {
     my $self = shift;
 
+    my $metadata_file = $self->_metadata_pathname;
+    die "File does not exist: $metadata_file\n" unless -e $metadata_file;
+
     my $parser = XML::LibXML->new();
-    my $doc    = $parser->parse_file( $self->_metadata_pathname );
+    my $doc    = $parser->parse_file( $metadata_file );
     my $xc     = XML::LibXML::XPathContext->new( $doc->documentElement() );
 
     $xc->registerNs( @$ns_md );

@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider::CertFactory;
 BEGIN {
-  $Authen::NZigovt::ServiceProvider::CertFactory::VERSION = '1.02';
+  $Authen::NZigovt::ServiceProvider::CertFactory::VERSION = '1.03';
 }
 
 use warnings;
@@ -30,6 +30,13 @@ You may optionally include an organisational unit name (e.g.: "Innovation
 Labs") - leave  this field blank if you don't need it.
 EOF
 
+    subject_suffix => <<EOF,
+A certificate subject will be generated for you using the domain name,
+organisation name and optional organisational unit name you supplied.  If
+you want additional details in the subject, you can supply the here.  Prefix
+each fieldname with a forward slash (e.g.: /L=Wellington/ST=Wellington/C=NZ ).
+EOF
+
     domain => <<EOF,
 
 Enter the domain name for your agency.  You might choose to include an
@@ -51,6 +58,8 @@ sub generate_certs {
     $args{conf_dir} = $conf_dir;
 
     die "'$conf_dir' is not a directory\n" unless -d "$conf_dir/.";
+
+    $args{domain} =~ s/^(www|secure)[.]//;
 
     my $key_file = "$conf_dir/sp-sign-key.pem";
     _generate_private_key($key_file);
@@ -113,6 +122,7 @@ EOF
             . "  Environment:         $args->{env}\n"
             . "  Organisation:        $args->{org}\n"
             . "  Organisational Unit: $args->{org_unit}\n"
+            . "  Subject Suffix:      $args->{subject_suffix}\n"
             . "  Domain:              $args->{domain}\n\n";
 
         last TRY if _prompt_yes_no('Do you wish to generate certificates now? (y/n) ', '');
@@ -148,19 +158,23 @@ sub _generate_private_key {
 sub _generate_certificate {
     my($type, $key_path, $args) = @_;
 
+    my $conf_dir = $args->{conf_dir};
     my($name, $out_base);
     if($type eq 'sig') {
         $name     = "$args->{env}.sa.saml.sig.$args->{domain}";
-        $out_base = "sp-sign";
+        $out_base = "$conf_dir/sp-sign";
     }
     else {
         $name     = "$args->{env}.sa.mutual.ssl.$args->{domain}";
-        $out_base = "sp-ssl";
+        $out_base = "$conf_dir/sp-ssl";
     }
 
     my $subject = "/CN=${name}/O=$args->{org}";
     if($args->{org_unit}  and  $args->{org_unit} =~ /\S/) {
-        $subject .= "/OU=$args->{org_unit}"
+        $subject .= "/OU=$args->{org_unit}";
+    }
+    if($args->{subject_suffix}  and  $args->{subject_suffix} =~ /\S/) {
+        $subject .= $args->{subject_suffix};
     }
     my @command = (
         'openssl', 'req', '-new', '-key', $key_path,
@@ -192,8 +206,6 @@ sub _check_args {
 
     die "Need organisation name to generate certs\n" unless $args->{org};
     die "Need domain name to generate certs\n"       unless $args->{domain};
-
-    $args->{domain} =~ s/^www[.]//;
 
     die "Need environment (MTS/ITE/PROD) to generate certs\n"
         unless $args->{env};
@@ -242,6 +254,19 @@ sub _validate_org_unit {
 
     given($value) {
         when(m{\A[a-z0-9(),./ -]*\z}i) { return 1; }
+        default {
+            print "Organisational unit should be plain text without special characters\n";
+        }
+    };
+    return;
+}
+
+
+sub _validate_subject_suffix {
+    my($class, $value) = @_;
+
+    given($value) {
+        when(m{\A(/[A-Z]+=[a-zA-Z0-9(),. -]+)*\z}i) { return 1; }
         default {
             print "Organisational unit should be plain text without special characters\n";
         }

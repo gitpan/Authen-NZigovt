@@ -25,10 +25,13 @@ my(%opt);
 
 if(!GetOptions(\%opt,
     'help|?',
+    'version',
     'conf_dir|conf-dir|c=s',
+    'allow_create|allow-create',
     'env=s',
     'org=s',
-    'org_unit=s',
+    'org_unit|org-unit=s',
+    'subject=s',
     'domain=s',
 )) {
     pod2usage(-exitval => 1,  -verbose => 0);
@@ -38,6 +41,8 @@ if(!GetOptions(\%opt,
 if($opt{help} or (@ARGV && $ARGV[0] eq 'help')) {
     pod2usage(-exitstatus => 0, -verbose => 2);
 }
+
+$ARGV[0] ||= 'version' if $opt{version};
 
 eval { Authen::NZigovt->run_command(\%opt, @ARGV); };
 if($@) {
@@ -64,14 +69,17 @@ nzigovt - Tools for interacting with the New Zealand 'igovt Logon Service'
    make-req    generate a SAML AuthnRequest, encoded as a URL
    dump-req    dissect the provided URL and dump the XML
    resolve     resolve an artifact to an FLT
+   version     print module version number and exit
    help        detailed help message
 
   Options:
 
    --conf-dir <path>  pathname of directory containing metadata & cert files
+   --allow-create     can be used with 'make-req' to allow account creation
    --env <name>       target environment (must be: 'mts', 'ite' or 'prod')
    --org <name>       organisation/agency name, e.g.: "Department of Innovation"
    --org-unit <name>  organisational unit, e.g.: "Innovation Labs"
+   --subject <detail> additional detail for certificate subject
    --domain <name>    agency site domain e.g.: innovation.govt.nz
 
 =head1 DESCRIPTION
@@ -112,7 +120,12 @@ the Identity Provider.
 
 Generate a URL containing a SAML AuthnRequest - for initiating a logon.
 
-=item dump-req
+Note: By default, the AuthnRequest will have the AllowCreate flag set to false
+(i.e.: the user must already have an igovt logon associated with this SP).  Use
+C<--allow-create> if you want the request to allow a new account and FLT to be
+created.
+
+=item dump-req <request URL>
 
 Takes a URL containing a SAML AuthnRequest; decodes it; and dumps the XML.  For
 example:
@@ -122,15 +135,27 @@ example:
 This utility can be used to dump AuthnRequests produced by any SAML
 implementation.
 
-=item resolve
+=item resolve <artifact> <request ID>
 
-Takes a URL containing a SAML artifact; decodes it; generates a SAML
-ArtifactResolve request; sends the request to the IdP using SOAP over the SSL
-back-channel; validates the resulting assertion; and extracts the FLT
-(Federated Logon Tag) from the response.
+This command takes two arguments - an artifact (either the whole URL or just
+the SAMLart part from the query string) and the request ID which was output
+from the original 'make-req' command.
+
+The command will decode the SAML artifact; generate a SAML ArtifactResolve
+request; send the request to the IdP using SOAP over the SSL back-channel;
+validate the resulting assertion; and extract the FLT (Federated Logon Tag)
+from the response.
 
 Note: in practice a SML artifact must be resolved very soon after it is
 generated or it will expire.
+
+=item version
+
+Print version number of L<Authen::NZigovt> module and exit.
+
+=item help
+
+Display this documentation.
 
 =back
 
@@ -158,13 +183,16 @@ If you do not provide any certificate parameters, you will be prompted.
 The service provider agency/organisation name which should be used in the
 certificates.
 
-=item B<< --org "<name>" >>
+=item B<< --org-unit "<name>" >>
 
 The optional organisational unit name for use in the certificates.
 
-=item B<< --help >> (alias -?)
+=item B<< --subject "<detail>" >>
 
-Display this documentation.
+Optional additional details to go on the end of the certificate subject field.
+The CN will be calculated for you based on --domain.  The O and OU will be
+added based on --org and --org-unit.  Prefix each fieldname with a forward
+slash (e.g.: --subject /L=Wellington/ST=Wellington/C=NZ).
 
 =back
 

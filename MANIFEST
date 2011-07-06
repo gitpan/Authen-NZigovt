@@ -17,6 +17,7 @@ lib/Authen/NZigovt/ServiceProvider.pm
 lib/Authen/NZigovt/ServiceProvider/Builder.pm
 lib/Authen/NZigovt/ServiceProvider/CertFactory.pm
 lib/Authen/NZigovt/XMLSig.pm
+libauthen-nzigovt-perl_1.02-1_all.deb
 t/00-load.t
 t/50-logon-strength.t
 t/release-pod-coverage.t

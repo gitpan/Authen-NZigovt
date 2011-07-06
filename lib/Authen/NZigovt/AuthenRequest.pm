@@ -1,6 +1,6 @@
 package Authen::NZigovt::AuthenRequest;
 BEGIN {
-  $Authen::NZigovt::AuthenRequest::VERSION = '1.02';
+  $Authen::NZigovt::AuthenRequest::VERSION = '1.03';
 }
 
 use strict;
