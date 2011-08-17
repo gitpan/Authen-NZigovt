@@ -1,6 +1,6 @@
 package Authen::NZigovt::IdentityProvider;
 BEGIN {
-  $Authen::NZigovt::IdentityProvider::VERSION = '1.03';
+  $Authen::NZigovt::IdentityProvider::VERSION = '1.04';
 }
 
 use strict;

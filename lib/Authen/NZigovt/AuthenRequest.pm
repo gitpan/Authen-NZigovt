@@ -1,6 +1,6 @@
 package Authen::NZigovt::AuthenRequest;
 BEGIN {
-  $Authen::NZigovt::AuthenRequest::VERSION = '1.03';
+  $Authen::NZigovt::AuthenRequest::VERSION = '1.04';
 }
 
 use strict;
@@ -21,7 +21,7 @@ sub new {
     my $class = shift;
     my $sp    = shift;
 
-    my $self = bless { 
+    my $self = bless {
         allow_create    => 'false',
         force_auth      => 'true',
         auth_strength   => 'low',
@@ -57,7 +57,7 @@ sub destination_url { shift->{destination_url};     }
 sub saml_request    { shift->{saml_request};        }
 sub relay_state     { shift->{relay_state};         }
 sub allow_create    { shift->_bool('allow_create'); }
-sub force_auth      { shift->_bool('force_ath');    }
+sub force_auth      { shift->_bool('force_auth');   }
 sub auth_strength   { shift->{auth_strength};       }
 sub _query_string   { shift->{query_string};        }
 sub _nameid_format  { shift->{nameid_format};       }
@@ -66,7 +66,7 @@ sub _x              { shift->{x};                   }
 
 sub _bool {
     my($self, $flag) = @_;
-    my $value = shift->{allow_create};
+    my $value = shift->{$flag};
     return (defined($value) && lc($value) =~ /^(1|true)$/)
            ? 'true'
            : 'false';
