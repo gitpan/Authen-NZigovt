@@ -17,7 +17,8 @@ lib/Authen/NZigovt/ServiceProvider.pm
 lib/Authen/NZigovt/ServiceProvider/Builder.pm
 lib/Authen/NZigovt/ServiceProvider/CertFactory.pm
 lib/Authen/NZigovt/XMLSig.pm
-libauthen-nzigovt-perl_1.03-1_all.deb
+libauthen-nzigovt-perl_1.04-1_all.deb
+libauthen-nzigovt-perl_1.04-1_i386.changes
 t/00-load.t
 t/10-metadata.t
 t/20-request.t

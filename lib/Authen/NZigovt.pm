@@ -1,6 +1,6 @@
 package Authen::NZigovt;
 BEGIN {
-  $Authen::NZigovt::VERSION = '1.04';
+  $Authen::NZigovt::VERSION = '1.05';
 }
 
 use warnings;

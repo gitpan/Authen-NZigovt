@@ -1,5 +1,8 @@
 Revision history for Authen-NZigovt
 
+1.05      2012-04-27 12:32:49 Pacific/Auckland
+    - add skip_signature_check option to support IdP cert change
+
 1.04      2011-08-17 20:55:04 Pacific/Auckland
     - fix broken handling of ForceAuthn parameter in AuthnRequest
     - add tests for metadata and request classes

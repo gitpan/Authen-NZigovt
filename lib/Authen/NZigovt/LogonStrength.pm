@@ -1,6 +1,6 @@
 package Authen::NZigovt::LogonStrength;
 BEGIN {
-  $Authen::NZigovt::LogonStrength::VERSION = '1.04';
+  $Authen::NZigovt::LogonStrength::VERSION = '1.05';
 }
 
 use strict;
