@@ -1,6 +1,6 @@
 package Authen::NZigovt::ResolutionRequest;
-BEGIN {
-  $Authen::NZigovt::ResolutionRequest::VERSION = '1.05';
+{
+  $Authen::NZigovt::ResolutionRequest::VERSION = '1.06';
 }
 
 use warnings;

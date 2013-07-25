@@ -1,6 +1,6 @@
 package Authen::NZigovt::XMLSig;
-BEGIN {
-  $Authen::NZigovt::XMLSig::VERSION = '1.05';
+{
+  $Authen::NZigovt::XMLSig::VERSION = '1.06';
 }
 
 use strict;

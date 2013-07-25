@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider::Builder;
-BEGIN {
-  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.05';
+{
+  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.06';
 }
 
 use warnings;
@@ -16,14 +16,6 @@ my $term      = undef;
 
 my @fields = (
 
-    id => <<EOF,
-The metadata file is identified by a unique 'ID'.  This identifier is not
-used for any purpose other than as a target for the digital signature.
-You might want to use an ID of the form:
-
-  AGENCY-SP-DEV
-EOF
-
     entity_id => <<EOF,
 The 'Entity ID' is a URL that identifies the igovt logon service privacy
 domain that your service provider is a part of.  You must supply a value
@@ -38,10 +30,12 @@ After a user has logged on, which URL on your site should the IdP redirect
 the user back to?
 EOF
 
-    url_single_logout => <<EOF,
-The single logout URL is the URL which the IdP should use to advise your
-application that a single-signon session has been terminated.  You should leave
-this blank if your application does not implement single logout.
+    organization_name => <<EOF,
+What is the name of the agency/company?
+EOF
+
+    organization_url => <<EOF,
+What URL should be used to identify the agency/company?
 EOF
 
     contact_company => <<EOF,

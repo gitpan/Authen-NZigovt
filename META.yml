@@ -1,5 +1,5 @@
 ---
-abstract: 'Tools for integrating with the New Zealand igovt logon service'
+abstract: "Tools for integrating with the New Zealand igovt logon service (now \"RealMe\")"
 author:
   - 'Grant McLean <grant@catalyst.net.nz>'
 build_requires:
@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200007, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,6 +16,7 @@ name: Authen-NZigovt
 requires:
   Crypt::OpenSSL::RSA: 0
   Crypt::OpenSSL::X509: 0
+  Date::Parse: 0
   Digest::SHA1: 0
   IO::Compress::RawDeflate: 0
   LWP: 0
@@ -26,4 +27,4 @@ requires:
   perl: 5.010
 resources:
   repository: git://github.com/grantm/Authen-NZigovt.git
-version: 1.05
+version: 1.06
