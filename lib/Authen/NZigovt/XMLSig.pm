@@ -1,6 +1,6 @@
 package Authen::NZigovt::XMLSig;
 {
-  $Authen::NZigovt::XMLSig::VERSION = '1.06';
+  $Authen::NZigovt::XMLSig::VERSION = '1.07';
 }
 
 use strict;
@@ -20,7 +20,7 @@ messaging.
 
 
 use Carp          qw(croak);
-use Digest::SHA1  qw(sha1 sha1_base64);
+use Digest::SHA   qw(sha1 sha1_base64);
 use MIME::Base64  qw(encode_base64 decode_base64);
 
 require XML::LibXML;

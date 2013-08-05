@@ -1,6 +1,6 @@
 package Authen::NZigovt::IdentityProvider;
 {
-  $Authen::NZigovt::IdentityProvider::VERSION = '1.06';
+  $Authen::NZigovt::IdentityProvider::VERSION = '1.07';
 }
 
 use strict;
@@ -10,7 +10,7 @@ require XML::LibXML;
 require XML::LibXML::XPathContext;
 
 use MIME::Base64 qw(encode_base64);
-use Digest::SHA1 qw(sha1_base64);
+use Digest::SHA  qw(sha1_base64);
 
 
 my $metadata_from_file = undef;

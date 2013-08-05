@@ -17,7 +17,7 @@ requires:
   Crypt::OpenSSL::RSA: 0
   Crypt::OpenSSL::X509: 0
   Date::Parse: 0
-  Digest::SHA1: 0
+  Digest::SHA: 0
   IO::Compress::RawDeflate: 0
   LWP: 0
   URI: 0
@@ -27,4 +27,4 @@ requires:
   perl: 5.010
 resources:
   repository: git://github.com/grantm/Authen-NZigovt.git
-version: 1.06
+version: 1.07

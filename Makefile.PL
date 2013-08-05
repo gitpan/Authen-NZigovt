@@ -25,7 +25,7 @@ my %WriteMakefileArgs = (
     "Crypt::OpenSSL::RSA" => 0,
     "Crypt::OpenSSL::X509" => 0,
     "Date::Parse" => 0,
-    "Digest::SHA1" => 0,
+    "Digest::SHA" => 0,
     "IO::Compress::RawDeflate" => 0,
     "LWP" => 0,
     "URI" => 0,
@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
   "TEST_REQUIRES" => {
     "Test::More" => "0.88"
   },
-  "VERSION" => "1.06",
+  "VERSION" => "1.07",
   "test" => {
     "TESTS" => "t/*.t"
   }
