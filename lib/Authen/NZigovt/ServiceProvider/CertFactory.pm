@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider::CertFactory;
 {
-  $Authen::NZigovt::ServiceProvider::CertFactory::VERSION = '1.07';
+  $Authen::NZigovt::ServiceProvider::CertFactory::VERSION = '1.08';
 }
 
 use warnings;

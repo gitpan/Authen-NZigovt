@@ -1,6 +1,6 @@
 package Authen::NZigovt;
 {
-  $Authen::NZigovt::VERSION = '1.07';
+  $Authen::NZigovt::VERSION = '1.08';
 }
 
 use warnings;
@@ -12,6 +12,10 @@ use strict;
 Authen::NZigovt - Tools for integrating with the New Zealand igovt logon service (now "RealMe")
 
 =head1 DESCRIPTION
+
+B<STATUS: DEPRECATED> - this module has been renamed to L<Authen::NZRealMe> and
+all further development is taking place there.  This module will be removed
+from CPAN shortly.
 
 This module provides an API for integrating your application with the New
 Zealand igovt logon service using SAML 2.0 messaging.

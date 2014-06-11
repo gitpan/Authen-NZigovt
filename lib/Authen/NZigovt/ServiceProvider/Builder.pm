@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider::Builder;
 {
-  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.07';
+  $Authen::NZigovt::ServiceProvider::Builder::VERSION = '1.08';
 }
 
 use warnings;

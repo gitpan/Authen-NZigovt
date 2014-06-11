@@ -4,7 +4,7 @@
       "Grant McLean <grant@catalyst.net.nz>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 5.006, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -52,9 +52,9 @@
       "repository" : {
          "type" : "git",
          "url" : "git://github.com/grantm/Authen-NZigovt.git",
-         "web" : "http://github.com/grantm/Authen-NZigovt"
+         "web" : "https://github.com/grantm/Authen-NZigovt"
       }
    },
-   "version" : "1.07"
+   "version" : "1.08"
 }
 

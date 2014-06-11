@@ -1,6 +1,6 @@
 package Authen::NZigovt::ServiceProvider;
 {
-  $Authen::NZigovt::ServiceProvider::VERSION = '1.07';
+  $Authen::NZigovt::ServiceProvider::VERSION = '1.08';
 }
 
 use strict;
